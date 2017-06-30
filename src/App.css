@@ -1,0 +1,39 @@
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+body {
+  font-family:
+    /* Safari for OS X and iOS (San Francisco) */
+    -apple-system,
+    /* Chrome >= 56 for OS X (San Francisco), Windows, Linux and Android */
+    system-ui,
+    /* Chrome < 56 for OS X (San Francisco) */
+    BlinkMacSystemFont,
+    /* Windows */
+    "Segoe UI",
+    /* Android */
+    "Roboto",
+    /* Basic web fallback */
+    "Helvetica Neue", Arial, sans-serif !default;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.fieldRow {
+  display: flex;
+}
+
+.fieldCell{
+  border: solid 2px black;
+  width: 50px;
+  height: 50px;
+}
+
+.empty{
+  background: grey;
+}
