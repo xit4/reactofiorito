@@ -19,16 +19,23 @@ body {
     "Helvetica Neue", Arial, sans-serif !default;
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
+@mixin max-width($width) {
+    @media screen and (max-width: $width) {
+        @content;
+    }
 }
 
-.fieldRow {
+.field {
   display: flex;
+  flex-direction: row;
+  flex-flow: wrap;
 }
 
 .fieldCell{
+  font-size: 1.5em;
+  display:flex;
+  justify-content: center;
+  align-items: center;
   border: solid 2px black;
   width: 50px;
   height: 50px;
@@ -36,4 +43,12 @@ body {
 
 .empty{
   background: grey;
+}
+
+.bomb{
+  background: black;
+}
+
+.number{
+  background: lightblue;
 }

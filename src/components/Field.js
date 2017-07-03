@@ -12,21 +12,41 @@ class Field extends React.Component {
 
   generateField(rows, cols, bombs){
     var newField = {};
-    var rowCount = 0;
     for(let i=0; i < rows*cols; i++){
-      if(i%cols===0){
-        rowCount++;
-        newField[rowCount] = [];
-      }
-      newField[rowCount].push(
-        {
+      newField[i] = {
           id: i,
           type: 'empty',
           visibility: true
         }
-      )
     }
-    return newField;
+    return newField;//this.placeBombs(rows, cols, bombs, newField);
+  }
+
+  placeBombs(rows, cols, bombs, field){
+    var potentialBombIndex = Math.floor(Math.random()*(rows*cols));
+    var occupied = [];
+    for(let i=0; i<bombs; i++){
+      let xIndex = Math.floor(potentialBombIndex/cols);
+      let yIndex = potentialBombIndex%cols;
+      field[xIndex][yIndex].type = 'bomb';
+      occupied.push(potentialBombIndex);
+      while(occupied.indexOf(potentialBombIndex)>=0){
+        potentialBombIndex = Math.floor(Math.random()*(rows*cols));
+      }
+    }
+    return field;
+  }
+
+  updateNumbers(field){
+    for(let row of field){
+      for(let cell of row){
+        cell.number = this.countNearbyBombs(cell, field);
+      }
+    }
+  }
+
+  countNearbyBombs (cell, field){
+
   }
 
   componentDidMount(){
@@ -39,16 +59,15 @@ class Field extends React.Component {
 
   render() {
     var field = this.state.fieldObject;
-    var rowArrays = Object.keys(field);
+    var fieldArray = Object.keys(field);
     return (
-      <div className='field'>
-        {rowArrays.length > 0 &&
-          rowArrays.map((row, index)=> {
-            return <div key={'rowIndex'+index} className='fieldRow'> {field[row].map(cell => {
+      <div className='field' style={{width: (this.props.columns+1)*50+'px'}}>
+        {fieldArray.length > 0 &&
+          fieldArray.map((cellId)=> {
+              let cell = field[cellId];
               return <Cell key={cell.id} cellObject={cell}/>
-            })} </div>
-          })
-        }
+            })
+          }
       </div>
     )
   }

@@ -16,7 +16,10 @@ class Cell extends React.Component {
     }
     return (
       <div className={classes.join(' ')}>
-        {cell.id}
+        {
+          cell.number &&
+          <span>{cell.number}</span>
+        }
       </div>
     )
   }
