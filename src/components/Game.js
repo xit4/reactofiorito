@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Field from './Field';
 import Settings from './Settings';
 
@@ -13,15 +12,11 @@ class Game extends React.Component {
   render() {
     return (
       <div>
-        <Field rows={10} columns={10} bombs={6}/>
+        <Field rows={6} columns={6} bombs={5}/>
         <Settings />
       </div>
     )
   }
-}
-
-Game.propTypes = {
-
 }
 
 

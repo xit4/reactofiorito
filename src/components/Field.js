@@ -6,11 +6,14 @@ class Field extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      fieldObject: {}
+      fieldObject: {},
+      isGameWon: false,
+      isGameLost: false
     };
     this.handleClickCell = this.handleClickCell.bind(this);
     this.traverseMatrix = this.traverseMatrix.bind(this);
     this.revealCell = this.revealCell.bind(this);
+    this.checkGameWon = this.checkGameWon.bind(this);
   }
 
   generateField(rows, cols, bombs) {
@@ -95,7 +98,7 @@ class Field extends React.Component {
     return bombCount;
   }
 
-  revealCell(cell){
+  revealCell(cell) {
     this.setState(prevState => ({
       ...prevState,
       fieldObject: {
@@ -109,18 +112,17 @@ class Field extends React.Component {
   }
 
   handleClickCell(cell) {
-    if(cell.visibility){
+    if (cell.visibility) {
       return;
     }
     const {fieldObject} = this.state;
     this.revealCell(cell);
     switch (cell.type) {
       case 'bomb':
-        //TODO modale you lost
+        this.setState({isGameLost: true})
         break;
       case 'empty':
         let queue = this.traverseMatrix(cell.id, []);
-        let newField = {}
         queue.forEach(cellId => {
           this.revealCell(fieldObject[cellId])
         })
@@ -134,19 +136,20 @@ class Field extends React.Component {
     }
   }
 
-  traverseMatrix(index, queue){
+  traverseMatrix(index, queue) {
     const {rows, columns} = this.props;
     const {fieldObject} = this.state;
 
-    if(queue.indexOf(index) !== -1)
+    if (queue.indexOf(index) !== -1)
       return queue;
-    if(fieldObject[index].type === 'number'){
+    if (fieldObject[index].type === 'number') {
       queue.push(index);
       return queue;
-    }else if(fieldObject[index].type === 'empty'){
+    } else if (fieldObject[index].type === 'empty') {
       queue.push(index);
+    } else {
+      return queue;
     }
-    else{ return queue; }
 
     var leftSide = index % columns === 0;
     var rightSide = (index + 1) % columns === 0;
@@ -180,6 +183,24 @@ class Field extends React.Component {
     return queue;
   }
 
+  checkGameWon() {
+    const {fieldObject: field, isGameWon, isGameLost} = this.state;
+    if(isGameWon || isGameLost)
+      return;
+    const gameWon = Object.keys(field).every(cellId => {
+      let isBomb = field[cellId].type === 'bomb';
+      let isVisible = field[cellId].visibility;
+      return isBomb || isVisible;
+    })
+    if(gameWon){
+      this.setState({isGameWon: gameWon});
+    }
+  }
+
+  shouldComponentUpdate(){
+      return !this.setState.isGameWon || !this.setState.isGameLost
+  }
+
   componentDidMount() {
     const {rows, columns, bombs} = this.props;
 
@@ -188,20 +209,24 @@ class Field extends React.Component {
     this.setState({fieldObject: newField});
   }
 
+  componentDidUpdate(){
+    this.checkGameWon();
+  }
+
   render() {
-    var field = this.state.fieldObject;
+    const {fieldObject: field, isGameLost, isGameWon} = this.state;
     var fieldArray = Object.keys(field);
-    return (
-      <div className='field' style={{
-        width: (this.props.columns + 1) * 50 + 'px'
-      }}>
-        {fieldArray.length > 0 && fieldArray.map((cellId) => {
-          let cell = field[cellId];
-          return <Cell key={cell.id} cellObject={cell} onClickCell={this.handleClickCell}/>
-        })
+    return ((isGameLost && <span>Lost</span>) ||
+       (isGameWon && <span>Won</span>)  ||
+       <div className='field' style={{
+      width: (this.props.columns + 1) * 50 + 'px'
+    }}>
+      {fieldArray.length > 0 && fieldArray.map((cellId) => {
+        let cell = field[cellId];
+        return <Cell key={cell.id} cellObject={cell} onClickCell={this.handleClickCell}/>
+      })
 }
-      </div>
-    )
+    </div>)
   }
 }
 
