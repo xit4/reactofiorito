@@ -13,7 +13,7 @@ class Game extends React.Component {
   render() {
     return (
       <div>
-        <Field rows={6} columns={6} bombs={10}/>
+        <Field rows={10} columns={10} bombs={6}/>
         <Settings />
       </div>
     )

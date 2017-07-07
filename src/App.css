@@ -25,10 +25,27 @@ body {
     }
 }
 
+@keyframes unfoldIn {
+  0% {
+    transform:scaleY(.005) scaleX(0);
+  }
+  50% {
+    transform:scaleY(.005) scaleX(1);
+  }
+  100% {
+    transform:scaleY(1) scaleX(1);
+  }
+}
+
 .field {
   display: flex;
   flex-direction: row;
   flex-flow: wrap;
+  animation:unfoldIn 2s cubic-bezier(0.1, 0.8, 0.1, 1) forwards;
+}
+
+.fieldCell:active {
+  box-shadow: 0px 0px 20px 0px grey inset;
 }
 
 .fieldCell{
@@ -37,18 +54,25 @@ body {
   justify-content: center;
   align-items: center;
   border: solid 2px black;
+  background: darkgrey;
   width: 50px;
   height: 50px;
+  transition: background 2s;
 }
 
 .empty{
-  background: grey;
+  background: darkseagreen;
 }
 
 .bomb{
-  background: black;
+  background: darkred;
 }
 
 .number{
-  background: lightblue;
+  background: mediumseagreen;
+}
+
+.App{
+  display: flex;
+  justify-content: center;
 }

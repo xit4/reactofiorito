@@ -9,16 +9,19 @@ class Cell extends React.Component {
   }
 
   render() {
-    var cell = this.props.cellObject;
-    var classes = ['fieldCell'];
-    if(cell.visibility){
-      classes.push(cell.type);
+    let {cellObject, onClickCell} = this.props;
+    let classes = ['fieldCell'];
+    if(cellObject.visibility){
+      classes.push(cellObject.type);
     }
     return (
-      <div className={classes.join(' ')}>
+      <div className={classes.join(' ')} onClick={(e) => {
+        e.preventDefault();
+        onClickCell(cellObject);
+      }}>
         {
-          cell.number &&
-          <span>{cell.number}</span>
+          cellObject.visibility && cellObject.number > 0 && cellObject.type === 'number' &&
+          <span>{cellObject.number}</span>
         }
       </div>
     )
@@ -26,7 +29,8 @@ class Cell extends React.Component {
 }
 
 Cell.propTypes = {
-  cellObject: PropTypes.object.isRequired
+  cellObject: PropTypes.object.isRequired,
+  onClickCell: PropTypes.func.isRequired,
 }
 
 Cell.defaultProps = {
